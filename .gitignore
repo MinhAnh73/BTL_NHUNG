@@ -23,3 +23,17 @@ Release/
 *~
 .DS_Store
 Thumbs.db
+
+# Keil MDK-ARM generated outputs and user files
+Objects/
+Listings/
+*.crf
+*.dep
+*.bak
+*.uvopt
+*.uvoptx
+*.build_log.htm
+
+# Host test executables
+/tests/test_scale_logic
+/tests/test_qc_logic
