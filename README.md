@@ -4,8 +4,13 @@ Khung thư mục dự án cân QC dùng STM32F103C8T6 và FreeRTOS, đối chi�
 `STM32_QC_Scale_FreeRTOS_CAL_LinhHoat_EEPROM.zip` và quy trình trong
 `QuyTrinh-Git-2.pdf`.
 
-**Hiện chỉ có khung project**: chưa chép mã nguồn, thư viện, project Keil,
-cấu hình MCU hoặc kết quả kiểm thử từ ZIP. `Core/Src/main.c` chỉ chứa ghi chú.
+**Đã bổ sung nền tảng chung** từ ZIP: toàn bộ `middlewares/`, `Core/Inc/`,
+`app/inc/` và `app/src/app_ipc.c`. Hai người dùng chung header và IPC để triển khai
+hai nhóm task HX711/Storage và OLED/Buzzer trên các nhánh riêng.
+
+Driver tự viết, phần triển khai logic cân và bốn task, project Keil và mã khởi tạo
+hệ thống sẽ được bổ sung trong các PR tiếp theo. `Core/Src/main.c` hiện vẫn chỉ chứa
+ghi chú. Chưa thể build firmware hoàn chỉnh hoặc nạp kit từ phần nền tảng này.
 
 ## Cấu trúc thư mục
 
@@ -66,7 +71,8 @@ không cần thêm lớp thư mục `STM32_QC_Scale/` bên ngoài.
 | test_scale_logic.c, test_qc_logic.c, script chạy test | `tests/` |
 
 `hal/` chứa driver nhóm tự viết; HAL của ST nằm trong `middlewares/`.
-Các tên file trong bảng là kế hoạch bố trí, chưa phải file đã được đưa vào repo.
+Bảng mô tả vị trí module của dự án hoàn chỉnh. Hiện chỉ các file thuộc phần nền tảng
+chung nêu ở đầu README đã được đưa vào repo; các module còn lại sẽ bổ sung sau.
 Dự án ZIP hướng tới Keil µVision 5; phiên bản compiler và target sẽ được đối chiếu
 trực tiếp với project Keil khi bổ sung code. Chưa thể build hoặc chạy test từ khung này.
 
@@ -100,4 +106,6 @@ chân, clock, FreeRTOS và sinh code từ IDE. Khi đưa code vào, bổ sung h�
 - Commit chức năng dùng `feat(...)`, sửa lỗi dùng `fix(...)`, tái cấu trúc dùng
   `refactor(...)`.
 
-Chưa có lệnh build/test vì đây chỉ là khung project, chưa có code và phụ thuộc.
+Chưa có lệnh build/test cho firmware hoàn chỉnh vì phần triển khai ứng dụng và project
+Keil chưa được tích hợp. Phần nền tảng được đối chiếu nội dung với ZIP; chưa kiểm tra
+build bằng Keil hoặc chạy trên phần cứng.
