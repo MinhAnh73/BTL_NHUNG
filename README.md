@@ -1,12 +1,20 @@
 # BTL_NHUNG — STM32 QC Scale
 
 Khung thư mục dự án cân QC dùng STM32F103C8T6 và FreeRTOS, đối chiếu theo
-`STM32_QC_Scale_FreeRTOS_CAL_LinhHoat_EEPROM.zip` và quy trình trong
+`STM32_QC_Scale_FreeRTOS_NO_EEPROM_2Nguoi.zip` và quy trình trong
 `QuyTrinh-Git-2.pdf`.
 
 **Đã bổ sung nền tảng chung** từ ZIP: toàn bộ `middlewares/`, `Core/Inc/`,
 `app/inc/` và `app/src/app_ipc.c`. Hai người dùng chung header và IPC để triển khai
-hai nhóm task HX711/Storage và OLED/Buzzer trên các nhánh riêng.
+hai nhóm task trên các nhánh riêng.
+
+- **Người 1** phụ trách HX711Task và QCTask, gồm đo khối lượng, CAL/TARE và logic PASS/FAIL.
+- **Người 2** phụ trách OLEDTask, BuzzerTask và IPC, gồm hiển thị, âm báo và giao tiếp giữa các task.
+
+HX711Task gửi mẫu RAW cho QCTask qua Queue. QCTask gửi dữ liệu hiển thị cho
+OLEDTask qua Queue và gửi chế độ âm báo cho BuzzerTask qua Task Notification.
+Bản này bỏ EEPROM/SPI. Hệ số hiệu chuẩn, mục tiêu, dung sai và số đếm PASS lưu
+trong RAM, nên cần hiệu chuẩn lại sau khi tắt bật nguồn.
 
 Driver tự viết, phần triển khai logic cân và bốn task, project Keil và mã khởi tạo
 hệ thống sẽ được bổ sung trong các PR tiếp theo. `Core/Src/main.c` hiện vẫn chỉ chứa
@@ -22,7 +30,7 @@ BTL_NHUNG/
 ├── bsp/                     # Board support, sơ đồ chân (pinmap.md)
 ├── hal/
 │   ├── inc/                 # Header driver tự viết
-│   └── src/                 # HX711, OLED, buzzer, button, EEPROM 25LC256
+│   └── src/                 # HX711, OLED, buzzer, button
 ├── app/
 │   ├── inc/                 # Header task, cấu hình, kiểu dữ liệu và IPC
 │   └── src/                 # Task, logic cân và máy trạng thái
@@ -51,7 +59,7 @@ BTL_NHUNG/
 
 Các file `.gitkeep` giữ thư mục rỗng trong Git; có thể xóa khi thêm file thật.
 Giữ nguyên chữ hoa/thường của đường dẫn như trong ZIP. Dùng gốc repo hiện tại,
-không cần thêm lớp thư mục `STM32_QC_Scale/` bên ngoài.
+không cần thêm lớp thư mục `STM32_QC_Scale_FreeRTOS_NO_EEPROM/` bên ngoài.
 
 ## Vị trí module khi bổ sung code
 
@@ -61,8 +69,8 @@ không cần thêm lớp thư mục `STM32_QC_Scale/` bên ngoài.
 | Ngắt, MSP, RTOS hooks, startup | `Core/Src/` |
 | FreeRTOSConfig.h, app_config.h, cấu hình STM32 HAL | `Core/Inc/` |
 | Sơ đồ chân | `bsp/pinmap.md` |
-| HX711, OLED, buzzer, nút nhấn, EEPROM | `hal/inc/` và `hal/src/` |
-| task_hx711, task_oled, task_buzzer, task_storage | `app/inc/` và `app/src/` |
+| HX711, OLED, buzzer, nút nhấn | `hal/inc/` và `hal/src/` |
+| task_hx711, task_qc, task_oled, task_buzzer | `app/inc/` và `app/src/` |
 | app_tasks, app_ipc, scale, state_machine | `app/inc/` và `app/src/` |
 | app_cfg.h, app_types.h | `app/inc/` |
 | FreeRTOS Kernel, port Cortex-M3, heap_4 | `middlewares/FreeRTOS-Kernel/` |

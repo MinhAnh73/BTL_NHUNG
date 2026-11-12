@@ -15,8 +15,6 @@
 #define BTN_RESET_PORT GPIOB
 #define BTN_CAL_PIN GPIO_PIN_1
 #define BTN_CAL_PORT GPIOB
-#define EEPROM_CS_PORT GPIOA
-#define EEPROM_CS_PIN GPIO_PIN_4
 #define SCALE_CAPACITY_G 5000
 #define PHYSICAL_OVERLOAD_G 4900
 #define PRESENCE_G 20
@@ -34,5 +32,6 @@
 #define CAL_MAX_G 4000u
 #define CAL_STEP_G 5u
 #define HX_TASK_POLL_MS 20u
+#define QC_TASK_POLL_MS 20u
 #define OLED_UPDATE_MS 250u
 #endif

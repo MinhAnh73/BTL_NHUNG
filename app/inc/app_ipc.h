@@ -4,12 +4,11 @@
 #include "queue.h"
 #include "task.h"
 #include "app_types.h"
-extern QueueHandle_t q_display; /* overwrite: latest state */
-extern QueueHandle_t q_storage_write; /* overwrite: most recent full snapshot */
-extern QueueHandle_t q_storage_boot; /* storage -> HX711 at boot */
+extern QueueHandle_t q_hx_samples; /* latest raw HX711 -> QCTask */
+extern QueueHandle_t q_display;    /* latest QC state -> OLEDTask */
 extern TaskHandle_t buzzer_task_handle;
 BaseType_t AppIPC_Init(void);
+void AppIPC_Sample(const HxSample *sample);
 void AppIPC_Display(const DisplayFrame *frame);
-void AppIPC_Save(const PersistData *data);
 void AppIPC_Beep(AlarmMode mode);
 #endif
