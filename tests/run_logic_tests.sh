@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
+# Chạy test logic trên PC (không cần HAL / FreeRTOS / board).
+# Dùng đúng tham số trong Core/Inc/app_params.h.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-gcc -std=c99 -Wall -Wextra -Werror -DAPP_CONFIG_H \
- -DPHYSICAL_OVERLOAD_G=4900 -DPRESENCE_G=20 -DSTABLE_DELTA_G=3 \
- -DSTABLE_SAMPLES=4 -DREMOVAL_SAMPLES=3 -DREARM_DELTA_G=15 \
- -ICore/Inc -Iapp/inc tests/test_qc_logic.c app/src/state_machine.c \
- -o /tmp/test_qc_logic
-/tmp/test_qc_logic
-gcc -std=c99 -Wall -Wextra -Werror -DAPP_CONFIG_H \
- -DCAL_MIN_G=100 -DCAL_MAX_G=4000 -DDEFAULT_COUNTS_PER_GRAM=1000.0f -DSCALE_CAPACITY_G=5000 \
- -ICore/Inc -Iapp/inc tests/test_scale_logic.c app/src/scale.c -lm \
- -o /tmp/test_scale_logic
-/tmp/test_scale_logic
+OUT="$(mktemp -d)"
+FLAGS="-std=c99 -Wall -Wextra -Werror -ICore/Inc -Iapp/inc"
+
+gcc $FLAGS tests/test_qc_logic.c app/src/state_machine.c app/src/scale.c -lm -o "$OUT/test_qc"
+"$OUT/test_qc"
+
+gcc $FLAGS tests/test_scale_logic.c app/src/scale.c -lm -o "$OUT/test_scale"
+"$OUT/test_scale"
